@@ -6,23 +6,12 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Client {
-    public static void runEchoProgram(String[] args) {
-        String hostname = args[2];
-        int portNumber;
+    public static void runEchoProgram(int port, String hostname) {
         Scanner scanner = new Scanner(System.in);
 
-        try {
-            portNumber  = Integer.parseInt(args[1]);
-        } catch (NumberFormatException e) {
-            System.out.println(
-                    "You seem to have entered an invalid port number."
-                            + "Please re-run this with a different port number."
-            );
-            return;
-        }
-
+        System.out.println("Creating socket...");
         try (
-                Socket echoSocket = new Socket(hostname, portNumber);
+                Socket echoSocket = new Socket(hostname, port);
                 PrintWriter out =
                         new PrintWriter(echoSocket.getOutputStream(), true);
                 BufferedReader in =
@@ -31,7 +20,8 @@ public class Client {
         ){
             String userInput;
             System.out.println(
-                    "Enter text to have it echoed by the server."
+                    "Connected to server " + hostname + ".\n"
+                    + "Enter text to have it echoed by the server."
                     + "(Enter 'quit' to quit.)"
             );
             while(true){
@@ -44,6 +34,7 @@ public class Client {
             }
 
         } catch (IOException e){
+            System.err.println("Failure to create socket/connect to server. Stopping client.");
             e.printStackTrace();
         }
     }

@@ -11,9 +11,9 @@ public class Echo {
         int port;
         for(int i = 0; i < args.length; i++) {
             switch (args[i]) {
-                case "-t" -> type = args[++i];
-                case "-p" -> portString = args[++i];
-                case "-h" -> hostname = args[++i];
+                case "-t": type = args[++i];
+                case "-p": portString = args[++i];
+                case "-h": hostname = args[++i];
             }
         }
         try {

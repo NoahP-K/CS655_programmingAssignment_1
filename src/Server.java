@@ -12,7 +12,6 @@ public class Server {
 
         System.out.println("Server listening on port " + port + ".");
 
-        //Identify local IP address (helpful for
         try {
             InetAddress localHost = InetAddress.getLocalHost();
             String ipAddress = localHost.getHostAddress();
@@ -42,6 +41,7 @@ public class Server {
             }
 
         } catch (IOException e) {
+            System.err.println("Failure to create socket/connect to client. Stopping server.");
             e.printStackTrace();
         }
     }

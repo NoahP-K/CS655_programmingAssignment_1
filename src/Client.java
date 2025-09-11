@@ -96,8 +96,7 @@ public class Client {
     ) {
         //send CSP message to server
         connection.out.println(
-               "s %s %d %d %d\n".formatted(results.type, results.probeNum, results.msgSize, serverDelay)
-        );
+               "s %s %d %d %d\n".formatted(results.type, results.probeNum, results.msgSize, serverDelay));
         while(true) {
             try {
                 if (connection.in.readLine().equals("200 OK: Ready")) {
@@ -118,18 +117,14 @@ public class Client {
         //Send a number of messages containing the file contents
         String fileContents;
         try {
-            fileContents = new String(Files.readString(Paths.get(
-                    "../data/%s/%s".formatted(results.type, file)
-            )));
+            fileContents = new String(Files.readString(Paths.get("../data/%s/%s".formatted(results.type, file))));
         } catch (IOException e) {
             System.err.println("Failed to read file " + file + ". Skipping this measurement phase.");
             return true;
         }
         for(int i=0; i<results.probeNum; i++) {
             long start = System.nanoTime();
-            connection.out.println(
-                    "w %d %s\n".formatted(i, fileContents)
-            );
+            connection.out.println("w %d %s\n".formatted(i, fileContents));
             try {
                 String response = connection.in.readLine();
                 long end = System.nanoTime();

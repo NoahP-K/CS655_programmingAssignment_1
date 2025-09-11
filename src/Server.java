@@ -2,14 +2,18 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+//class to hold the methods for the server portions of the assignment
 public class Server {
-
+    //helper function to retrieve local IP
     private static String getLocalIP() throws UnknownHostException {
         InetAddress localHost = InetAddress.getLocalHost();
         return localHost.getHostAddress();
     }
 
+    //run the server side of the echo program
     public static void runEchoProgram(int port) {
+        //Display local IP. Makes it easier for client-side user to find
+        // address to connect to.
         try {
             String ipAddress = getLocalIP();
             System.out.println("Client can connect at " + ipAddress);

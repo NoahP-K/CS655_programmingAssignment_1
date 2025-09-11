@@ -96,7 +96,7 @@ public class Client {
     ) {
         //send CSP message to server
         connection.out.println(
-               "s %s %d %d %d\n".formatted(results.type, results.probeNum, results.msgSize, serverDelay));
+               String.format("s %s %d %d %d\n", results.type, results.probeNum, results.msgSize, serverDelay));
         while(true) {
             try {
                 if (connection.in.readLine().equals("200 OK: Ready")) {
@@ -107,6 +107,7 @@ public class Client {
             }
         }
     }
+
     //perform measurement phase
     private static boolean measurementPhase(
             ClientConnection connection,
@@ -124,7 +125,7 @@ public class Client {
         }
         for(int i=0; i<results.probeNum; i++) {
             long start = System.nanoTime();
-            connection.out.println("w %d %s\n".formatted(i, fileContents));
+            connection.out.println(String.format("w %d %s\n", i, fileContents));
             try {
                 String response = connection.in.readLine();
                 long end = System.nanoTime();
@@ -134,8 +135,13 @@ public class Client {
                                 : "Echo: " + response.substring(0, 10) + "..."
                 );
                 System.out.println("Time elapsed: " + timeElapsed);
+                //Note that timeElapsed is in nanoseconds
                 if(results.type == "rtt") {results.measurements[i] = timeElapsed;}
-                //else if(results.)
+                else if(results.type == "tput") {
+                    //time is in nanoseconds, size is in bytes, result is megabytes per second
+                    double MBps = results.msgSize/timeElapsed * Math.pow(10, 3);
+                    results.measurements[i] = (long) MBps;
+                }
             } catch (IOException e) {
                 System.err.println("Failed to echo.");
             }

@@ -38,7 +38,8 @@ public class Client {
                 System.err.println("Failed to echo.");
             }
         }
-
+        //close the connection
+        connection.terminate();
     }
 
     //inner class to store measurement results during MP
@@ -47,12 +48,14 @@ public class Client {
         int msgSize;    //num. bytes in payload
         int probeNum;
         long[] measurements;     //collection of all measurements for this type+size
+        int failedProbes;   //number of probes that do not get responses
 
         public MeasurementResults(int numMeasurements, String type, int msgSize) {
             measurements = new long[numMeasurements];
             probeNum = numMeasurements;
             this.type = type;
             this.msgSize = msgSize;
+            failedProbes = 0;
         }
     }
 
@@ -82,10 +85,44 @@ public class Client {
         for(int i=0; i<rttFiles.length; i++) {
             Client.MeasurementResults results = new MeasurementResults(Client.probeNum, "rtt", rttMsgSizes[i]);
             //CSP
-            connectionSetupPhase(connection, results, 0);
+            boolean didSetUp = connectionSetupPhase(connection, results, 0);
+            if(!didSetUp) {
+                System.err.println("Setup failed. Skipping "
+                        + results.type + " test on "
+                        + results.probeNum + " byte payload.");
+                continue;
+            }
             //MP
-            //measurementPhase()
+            boolean didMeasure = measurementPhase(connection, 0, rttFiles[i], results);
+            if(!didMeasure) {
+                System.err.println("Measurement failed. Skipping."
+                        + results.type + " test on "
+                        + results.probeNum + " byte payload.");
+            }
+            double avgResult = 0;
+            for(long measurement: results.measurements) {avgResult += measurement;}
+            avgResult /= (results.probeNum - results.failedProbes);
+            System.out.println("Average RTT for " + results.msgSize + " byte payload: " + avgResult);
         }
+        //CTP
+        connectionTerminationPhase(connection);
+    }
+
+    //perform the connection termination phase
+    private static void connectionTerminationPhase(ClientConnection connection) {
+        //send termination message
+        connection.out.println("t\n");
+        while(true) {
+            try {
+                connection.in.readLine();
+                break;
+            } catch (IOException e) {
+                System.err.println("Problem receiving termination response. Stopping client.");
+                break;
+            }
+        }
+        //disconnect client
+        connection.terminate();
     }
 
     //perform the connection setup phase
@@ -121,7 +158,7 @@ public class Client {
             fileContents = new String(Files.readString(Paths.get("../data/%s/%s".formatted(results.type, file))));
         } catch (IOException e) {
             System.err.println("Failed to read file " + file + ". Skipping this measurement phase.");
-            return true;
+            return false;
         }
         for(int i=0; i<results.probeNum; i++) {
             long start = System.nanoTime();
@@ -144,6 +181,7 @@ public class Client {
                 }
             } catch (IOException e) {
                 System.err.println("Failed to echo.");
+                results.failedProbes++;
             }
         }
         return true;

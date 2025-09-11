@@ -16,6 +16,13 @@ public class ServerConnection {
         clientSocket = serverSocket.accept();
         out = new PrintWriter(clientSocket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+    }
 
+    public void terminate(){
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            System.err.println("Failed to close socket.");
+        }
     }
 }

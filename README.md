@@ -10,6 +10,7 @@ There are two parts:
 Run instructions: 
 * Clone the Github repository onto the machine that will be used to test, if not already done.
 * Navigate to the src directory and run the command 'javac *.java'
+* Find a valid port number on your machine that can be used to connect the client and server. 
 * Run a program as follows:
   * Echo: java Echo -t server -p {port_number} \~or~ java Echo -t client {server_name} -p {port_number}
     * Client can enter any text into their console and the text will display on the server's console.

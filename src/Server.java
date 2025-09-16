@@ -50,6 +50,23 @@ public class Server {
 
     // run the server side of the measure program - TODO
     public static void runMeasureProgram(int port) {
+        //Display local IP. Makes it easier for client-side user to find address to connect to.
+        try {
+            String ipAddress = getLocalIP();
+            System.out.println("Client can connect at " + ipAddress);
+        } catch (UnknownHostException e) {
+            System.err.println("Could not display local host address.");
+        }
 
+        ServerConnection connection;
+        try {
+            System.out.println("Starting server...");
+            connection = new ServerConnection(port);
+        } catch (IOException e) {
+            System.err.println("Failed to create socket. Stopping server.");
+            return;
+        }
+
+        System.out.println("Client connected.");
     }
 }

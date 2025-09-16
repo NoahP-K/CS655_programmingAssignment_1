@@ -155,7 +155,7 @@ public class Client {
         //Send a number of messages containing the file contents
         String fileContents;
         try {
-            fileContents = new String(Files.readString(Paths.get("../data/%s/%s".formatted(results.type, file))));
+            fileContents = new String(Files.readString(Paths.get(String.format("../data/%s/%s", results.type, file))));
         } catch (IOException e) {
             System.err.println("Failed to read file " + file + ". Skipping this measurement phase.");
             return false;

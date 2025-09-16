@@ -29,9 +29,9 @@ public class Measure {
             return;
         }
         if(type.equals("client")){
-            Client.runEchoProgram(port, hostname);
+            Client.runMeasureProgram(port, hostname);
         } else if (type.equals("server")){
-            Server.runEchoProgram(port);
+            Server.runMeasureProgram(port);
         } else {
             System.err.println("Argument -t must be either 'client' or 'server'.");
         }

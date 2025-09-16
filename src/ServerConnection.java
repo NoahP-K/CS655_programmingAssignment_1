@@ -5,12 +5,15 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+// This class represents the server side of the network connection between client and server.
 public class ServerConnection {
     public ServerSocket serverSocket;
     public Socket clientSocket;
     public BufferedReader in;
     public PrintWriter out;
 
+    // Establishes network connection from the server side
+    // Connects the out to the in so that messages can be transferred
     public ServerConnection(int port) throws IOException {
         serverSocket = new ServerSocket(port);
         clientSocket = serverSocket.accept();
@@ -18,6 +21,7 @@ public class ServerConnection {
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     }
 
+    // Severs the network connection from the server side
     public void terminate(){
         try {
             serverSocket.close();

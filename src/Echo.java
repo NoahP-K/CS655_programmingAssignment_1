@@ -1,4 +1,9 @@
-//Class for running the Echo program
+/*
+This program enables communication between a client and a server.
+Messages can be sent from the client. The user types into the client's console.
+The text that the user types is sent to the server, displayed on the server's console.
+Typing 'quit' terminates the program.
+ */
 public class Echo {
 
     public static void main(String[] args) {

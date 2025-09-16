@@ -1,9 +1,17 @@
+/*
+This program measures the round-trip time (RTT) and throughput
+of requests sent from the client to the server.
+It starts the connection between the two hosts, and then uses test values to observe the resulting values.
+ */
 public class Measure {
 
     public static void main(String[] args) {
         startMeasure(args);
     }
 
+    // Starts up the measurement routine, including connection setup
+    // Performs preprocessing of the necessary arguments
+    // Determines from these arguments whether the desired program to run is a client or server program
     private static void startMeasure(String[] args) {
         String type = "error";
         String portString = "error";
@@ -29,9 +37,9 @@ public class Measure {
             return;
         }
         if(type.equals("client")){
-            Client.runMeasureProgram(port, hostname);
+            Client.runMeasureProgram(port, hostname); // needs server name/IP address to connect to server
         } else if (type.equals("server")){
-            Server.runMeasureProgram(port);
+            Server.runMeasureProgram(port); // does not need IP address; will generate and print for client to use
         } else {
             System.err.println("Argument -t must be either 'client' or 'server'.");
         }

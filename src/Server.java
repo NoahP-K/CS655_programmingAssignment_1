@@ -68,5 +68,17 @@ public class Server {
         }
 
         System.out.println("Client connected.");
+
+        String inputLine;
+        try {
+            while ((inputLine = connection.in.readLine()) != null) {
+                String[] inputLineParsed =  inputLine.split(" ");
+                if (inputLineParsed[0].equals("s")) {
+
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to read input.");
+        }
     }
 }

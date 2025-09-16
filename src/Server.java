@@ -46,6 +46,7 @@ public class Server {
             System.err.println("Failed to read input.");
         }
 
+        connection.terminate();
     }
 
     // run the server side of the measure program - TODO
@@ -73,12 +74,20 @@ public class Server {
         try {
             while ((inputLine = connection.in.readLine()) != null) {
                 String[] inputLineParsed =  inputLine.split(" ");
-                if (inputLineParsed[0].equals("s")) {
+                if (inputLineParsed[0].equals("s")) { // Connection setup phase
 
+                } else if (inputLineParsed[0].equals("m")) { // Measurement phase
+
+                } else if (inputLineParsed[0].equals("t")) { // Connection termination phase
+
+                } else {
+                    System.err.println("404 ERROR: Invalid Measurement Message");
                 }
             }
         } catch (IOException e) {
             System.err.println("Failed to read input.");
         }
+
+        connection.terminate();
     }
 }

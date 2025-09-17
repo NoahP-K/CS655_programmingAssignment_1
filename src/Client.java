@@ -72,7 +72,7 @@ public class Client {
             if(!didSetUp) {
                 System.err.println("Setup failed. Skipping "
                         + results.type + " test on "
-                        + results.probeNum + " byte payload.");
+                        + results.msgSize + " byte payload.");
                 continue;
             }
             //MP
@@ -109,11 +109,7 @@ public class Client {
     }
 
     //perform the connection setup phase
-    private static boolean connectionSetupPhase(
-            ClientConnection connection,
-            MeasurementResults results,
-            int serverDelay
-    ) {
+    private static boolean connectionSetupPhase(ClientConnection connection, MeasurementResults results, int serverDelay) {
         //send CSP message to server
         connection.out.println(
                String.format("s %s %d %d %d\n", results.type, results.probeNum, results.msgSize, serverDelay));
@@ -129,12 +125,7 @@ public class Client {
     }
 
     //perform measurement phase
-    private static boolean measurementPhase(
-            ClientConnection connection,
-            int serverDelay,
-            String file,
-            MeasurementResults results
-    ) {
+    private static boolean measurementPhase(ClientConnection connection, int serverDelay, String file, MeasurementResults results) {
         //Send a number of messages containing the file contents
         String fileContents;
         try {

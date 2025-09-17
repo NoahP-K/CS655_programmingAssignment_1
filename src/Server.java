@@ -85,8 +85,11 @@ public class Server {
                         break;
                     }
                 } else if (inputLineParsed[0].equals("t")) { // Connection termination phase
-                    if (!inputLine.equals("t\n")) // if input string is not just t
+                    if (!inputLine.equals("t\n")) { // if input string is not just t
                         System.err.println("404 ERROR: Invalid Connection Termination Message");
+                    } else {
+                        connection.out.println("200 OK: Closing Connection");
+                    }
                     break; // system terminates either way
                 } else {
                     System.err.println("404 ERROR: Invalid Input Message");

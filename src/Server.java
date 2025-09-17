@@ -49,7 +49,7 @@ public class Server {
         connection.terminate();
     }
 
-    // run the server side of the measure program - TODO
+    // run the server side of the measure program
     public static void runMeasureProgram(int port) {
         //Display local IP. Makes it easier for client-side user to find address to connect to.
         try {
@@ -82,6 +82,7 @@ public class Server {
 
                 } else {
                     System.err.println("404 ERROR: Invalid Measurement Message");
+                    break;
                 }
             }
         } catch (IOException e) {

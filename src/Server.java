@@ -75,13 +75,21 @@ public class Server {
             while ((inputLine = connection.in.readLine()) != null) {
                 String[] inputLineParsed =  inputLine.split(" ");
                 if (inputLineParsed[0].equals("s")) { // Connection setup phase
-
+                    if (inputLineParsed.length != 5) { // if input string is invalid; more conditions to come
+                        System.err.println("404 ERROR: Invalid Connection Setup Message");
+                        break;
+                    }
                 } else if (inputLineParsed[0].equals("m")) { // Measurement phase
-
+                    if (inputLineParsed.length != 3) {
+                        System.err.println("404 ERROR: Invalid Measurement Message");
+                        break;
+                    }
                 } else if (inputLineParsed[0].equals("t")) { // Connection termination phase
-
+                    if (!inputLine.equals("t\n")) // if input string is not just t
+                        System.err.println("404 ERROR: Invalid Connection Termination Message");
+                    break; // system terminates either way
                 } else {
-                    System.err.println("404 ERROR: Invalid Measurement Message");
+                    System.err.println("404 ERROR: Invalid Input Message");
                     break;
                 }
             }
@@ -89,6 +97,6 @@ public class Server {
             System.err.println("Failed to read input.");
         }
 
-        connection.terminate();
+        connection.terminate(); // all roads lead to this termination
     }
 }

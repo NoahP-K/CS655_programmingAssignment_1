@@ -42,6 +42,23 @@ public class Client {
         connection.terminate();
     }
 
+    //inner class to store measurement results during MP
+    class MeasurementResults {
+        String type;    //rtt or tput
+        int msgSize;    //num. bytes in payload
+        int probeNum;
+        long[] measurements;     //collection of all measurements for this type+size
+        int failedProbes;   //number of probes that do not get responses
+
+        public MeasurementResults(int numMeasurements, String type, int msgSize) {
+            measurements = new long[numMeasurements];
+            probeNum = numMeasurements;
+            this.type = type;
+            this.msgSize = msgSize;
+            failedProbes = 0;
+        }
+    }
+
     //run the client side of the measure program
     public static void runMeasureProgram(int port, String hostname) {
         ClientConnection connection;
@@ -66,7 +83,7 @@ public class Client {
 
         //Run RTT measurements
         for(int i=0; i<rttFiles.length; i++) {
-            MeasurementResults results = new MeasurementResults(Client.probeNum, "rtt", rttMsgSizes[i]);
+            Client.MeasurementResults results = new MeasurementResults(Client.probeNum, "rtt", rttMsgSizes[i]);
             //CSP
             boolean didSetUp = connectionSetupPhase(connection, results, 0);
             if(!didSetUp) {
@@ -109,7 +126,11 @@ public class Client {
     }
 
     //perform the connection setup phase
-    private static boolean connectionSetupPhase(ClientConnection connection, MeasurementResults results, int serverDelay) {
+    private static boolean connectionSetupPhase(
+            ClientConnection connection,
+            Client.MeasurementResults results,
+            int serverDelay
+    ) {
         //send CSP message to server
         connection.out.println(
                String.format("s %s %d %d %d\n", results.type, results.probeNum, results.msgSize, serverDelay));
@@ -125,7 +146,12 @@ public class Client {
     }
 
     //perform measurement phase
-    private static boolean measurementPhase(ClientConnection connection, int serverDelay, String file, MeasurementResults results) {
+    private static boolean measurementPhase(
+            ClientConnection connection,
+            int serverDelay,
+            String file,
+            Client.MeasurementResults results
+    ) {
         //Send a number of messages containing the file contents
         String fileContents;
         try {

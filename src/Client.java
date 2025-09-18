@@ -173,8 +173,8 @@ public class Client {
                 );
                 System.out.println("Time elapsed: " + timeElapsed);
                 //Note that timeElapsed is in nanoseconds
-                if(results.type == "rtt") {results.measurements[i] = timeElapsed;}
-                else if(results.type == "tput") {
+                if(results.type.equals("rtt")) {results.measurements[i] = timeElapsed;}
+                else if(results.type.equals("tput")) {
                     //time is in nanoseconds, size is in bytes, result is megabytes per second
                     double MBps = results.msgSize/timeElapsed * Math.pow(10, 3);
                     results.measurements[i] = (long) MBps;

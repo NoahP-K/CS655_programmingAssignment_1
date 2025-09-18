@@ -117,7 +117,9 @@ public class Server {
                     connection.out.println("200 OK: Ready");
 
                 } else if (inputLineParsed[0].equals("m")) { // Measurement phase
-                    if (inputLineParsed.length != 3 || Integer.parseInt(inputLineParsed[1]) != measurementInfo.lastProbeNum + 1 || measurementInfo.lastProbeNum == measurementInfo.probeNum) {
+                    if (inputLineParsed.length != 3 ||
+                            Integer.parseInt(inputLineParsed[1]) != measurementInfo.lastProbeNum + 1 ||
+                            measurementInfo.lastProbeNum == measurementInfo.probeNum) {
                         System.err.println("404 ERROR: Invalid Measurement Message");
                         break;
                     }

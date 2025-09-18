@@ -43,7 +43,7 @@ public class Client {
     }
 
     //inner class to store measurement results during MP
-    class MeasurementResults {
+    static class MeasurementResults {
         String type;    //rtt or tput
         int msgSize;    //num. bytes in payload
         int probeNum;
@@ -162,7 +162,7 @@ public class Client {
         }
         for(int i=0; i<results.probeNum; i++) {
             long start = System.nanoTime();
-            connection.out.println(String.format("w %d %s\n", i, fileContents));
+            connection.out.println(String.format("m %d %s\n", i, fileContents));
             try {
                 String response = connection.in.readLine();
                 long end = System.nanoTime();

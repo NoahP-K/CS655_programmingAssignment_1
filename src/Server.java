@@ -50,7 +50,7 @@ public class Server {
     }
 
     // inner class to store request information
-    class MeasurementInfo {
+    static class MeasurementInfo {
         String type;    //rtt or tput
         int msgSize;    //num. bytes in payload
         int probeNum;
@@ -64,7 +64,16 @@ public class Server {
             this.serverDelay = serverDelay;
             lastProbeNum = 0;
         }
+
+        public MeasurementInfo() {
+            this.type = "unknown";
+            this.msgSize = 0;
+            this.probeNum = 0;
+            this.serverDelay = 0;
+            lastProbeNum = 0;
+        }
     }
+
     // run the server side of the measure program
     public static void runMeasureProgram(int port) {
         //Display local IP. Makes it easier for client-side user to find address to connect to.
@@ -90,10 +99,10 @@ public class Server {
         try {
             while ((inputLine = connection.in.readLine()) != null) {
                 String[] inputLineParsed =  inputLine.split(" ");
-                Server.MeasurementInfo measurementInfo;
+                Server.MeasurementInfo measurementInfo =  new MeasurementInfo();
                 if (inputLineParsed[0].equals("s")) { // Connection setup phase
                     if (inputLineParsed.length != 5 ||
-                            !(inputLineParsed[1] == "rtt" || inputLineParsed[1] == "tput") ||
+                            !(inputLineParsed[1].equals("rtt") || inputLineParsed[1].equals("tput")) ||
                             Integer.parseInt(inputLineParsed[2]) <= 0 || Integer.parseInt(inputLineParsed[3]) <= 0) {
                         // input string is invalid
                         System.err.println("404 ERROR: Invalid Connection Setup Message");
@@ -108,10 +117,14 @@ public class Server {
                     connection.out.println("200 OK: Ready");
 
                 } else if (inputLineParsed[0].equals("m")) { // Measurement phase
-                    if (inputLineParsed.length != 3) {
+                    if (inputLineParsed.length != 3 || Integer.parseInt(inputLineParsed[1]) != measurementInfo.lastProbeNum + 1 || measurementInfo.lastProbeNum == measurementInfo.probeNum) {
                         System.err.println("404 ERROR: Invalid Measurement Message");
                         break;
                     }
+                    measurementInfo.lastProbeNum++;
+                    System.out.println("Echoing message: " + inputLineParsed[2]);
+                    connection.out.println(inputLineParsed[2]);
+
                 } else if (inputLineParsed[0].equals("t")) { // Connection termination phase
                     if (!inputLine.equals("t\n")) { // if input string is not just t
                         System.err.println("404 ERROR: Invalid Connection Termination Message");

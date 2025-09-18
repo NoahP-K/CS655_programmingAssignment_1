@@ -98,7 +98,7 @@ public class Server {
         String inputLine;
         try {
             while ((inputLine = connection.in.readLine()) != null) {
-                String[] inputLineParsed =  inputLine.split(" ");
+                String[] inputLineParsed =  inputLine.split("\\s+");
                 Server.MeasurementInfo measurementInfo =  new MeasurementInfo();
                 if (inputLineParsed[0].equals("s")) { // Connection setup phase
                     if (inputLineParsed.length != 5 ||

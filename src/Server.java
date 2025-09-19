@@ -124,6 +124,18 @@ public class Server {
             while(true){
                 inputLine = connection.in.readLine();
                 String[] inputLineParsed = inputLine.split(" ");
+
+                //Error checking:
+                //verify that this is a probe message
+                if(!inputLineParsed[0].equals("m")) {
+                    throw new Exception(
+                            "Expected measurement probe (m). Message was labeled as " + inputLineParsed[0]
+                    );
+                }
+                //verify that the test message can be parsed into three sections
+                if(inputLineParsed.length != 3) {
+                    throw new Exception("Setup message is in the wrong format.");
+                }
                 //verify that the sequence number received is correct.
                 int probeNum = Integer.parseInt(inputLineParsed[1]);
                 if(probeNum >= info.probeNum || probeNum < 0) {
@@ -138,14 +150,12 @@ public class Server {
                             + "Expected probe number " + info.nextProbeNum + ", got " + probeNum
                     );
                 } else {info.nextProbeNum++;}
-                //verify that the test message can be parsed into three sections
-                if(inputLineParsed.length != 3) {
-                    throw new Exception("Setup message is in the wrong format.");
-                }
-                //verify that this is a probe message
-                if(!inputLineParsed[0].equals("m")) {
+                // verify that probe contents are of the correct size
+                if(inputLineParsed[2].length() != info.msgSize / Character.BYTES) {
                     throw new Exception(
-                            "Expected measurement probe (m). Message was labeled as " + inputLineParsed[0]
+                            "Wrong size probe. "
+                            + "Expected size " + info.msgSize + " bytes, got "
+                                    + inputLineParsed[2].length() + " characters."
                     );
                 }
 

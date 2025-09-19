@@ -152,17 +152,9 @@ public class Server {
                     );
                 } else {info.nextProbeNum++;}
                 // verify that probe contents are of the correct size
-                try {
-                    if(inputLineParsed[2].length() != info.msgSize) {
-                        throw new Exception(
-                                "Wrong size probe. "
-                                        + "Expected size " + info.msgSize + " bytes, got "
-                                        + inputLineParsed[2].length() + " characters."
-                        );
-                    }
-
-                } catch(UnsupportedEncodingException e) {
-                    System.err.println("Unsupported encoding.");
+                if(inputLineParsed[2].length() != info.msgSize) {
+                    throw new Exception("Wrong size probe. Expected size " + info.msgSize + " bytes, got "
+                                        + inputLineParsed[2].length() + " characters.");
                 }
 
                 //Echo the message back after server delay time

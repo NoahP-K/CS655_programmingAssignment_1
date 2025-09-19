@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 import java.nio.file.Paths;
 import java.nio.file.Files;
@@ -60,6 +61,7 @@ public class Client {
     //run the client side of the measure program
     public static void runMeasureProgram(int port, String hostname, int probeNum, int serverDelay) {
         ClientConnection connection;
+        System.out.println(System.getProperty("file.encoding"));
         try {
             System.out.println("Connecting to server " + hostname + "...");
             connection = new ClientConnection(hostname, port);

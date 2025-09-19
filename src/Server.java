@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -151,12 +152,17 @@ public class Server {
                     );
                 } else {info.nextProbeNum++;}
                 // verify that probe contents are of the correct size
-                if(inputLineParsed[2].length() != info.msgSize / Character.BYTES) {
-                    throw new Exception(
-                            "Wrong size probe. "
-                            + "Expected size " + info.msgSize + " bytes, got "
-                                    + inputLineParsed[2].length() + " characters."
-                    );
+                try {
+                    if(inputLineParsed[2].length() != info.msgSize) {
+                        throw new Exception(
+                                "Wrong size probe. "
+                                        + "Expected size " + info.msgSize + " bytes, got "
+                                        + inputLineParsed[2].length() + " characters."
+                        );
+                    }
+
+                } catch(UnsupportedEncodingException e) {
+                    System.err.println("Unsupported encoding.");
                 }
 
                 //Echo the message back after server delay time

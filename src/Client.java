@@ -34,7 +34,8 @@ public class Client {
             try {
                 System.out.println("echo: " + connection.in.readLine());
             } catch (IOException e) {
-                System.err.println("Failed to echo.");
+                System.err.println("Failed to echo. Stopping client.");
+                break;
             }
         }
         //close the connection
@@ -111,7 +112,7 @@ public class Client {
             double avgResult = 0;
             for(long measurement: results.measurements) {avgResult += measurement;}
             avgResult /= (results.probeNum - results.failedProbes);
-            System.out.println("Average RTT for " + results.msgSize + " byte payload: " + avgResult);
+            System.out.println("Average RTT for " + results.msgSize + " byte payload: " + avgResult + " nanoseconds");
             //some printing for easy reading
             System.out.println(
                     "END OF " + results.type.toUpperCase() + " TESTS"
@@ -149,7 +150,7 @@ public class Client {
             double avgResult = 0;
             for(long measurement: results.measurements) {avgResult += measurement;}
             avgResult /= (results.probeNum - results.failedProbes);
-            System.out.println("Average TPUT for " + results.msgSize + " byte payload: " + avgResult);
+            System.out.println("Average TPUT for " + results.msgSize + " byte payload: " + avgResult + " Mb/s");
             //some printing for easy reading
             System.out.println(
                     "END OF " + results.type.toUpperCase() + " TESTS"
@@ -245,13 +246,13 @@ public class Client {
                                 ? "Response: " + response
                                 : "Response: " + response.substring(0, 20) + "..."
                 );
-                System.out.println("Time elapsed: " + timeElapsed);
+                System.out.println("Time elapsed: " + timeElapsed + " nanoseconds");
                 //Note that timeElapsed is in nanoseconds
                 if(results.type.equals("rtt")) {results.measurements[i] = timeElapsed;}
                 else if(results.type.equals("tput")) {
                     //time is in nanoseconds, size is in bytes, result is megabytes per second
                     double MBps = (double) (results.msgSize * 1000) / timeElapsed;
-                    System.out.println("Throughput: " + MBps);
+                    System.out.println("Throughput: " + MBps + "MB/s");
                     results.measurements[i] = (long) MBps;
                 }
                 //some printing for easy reading

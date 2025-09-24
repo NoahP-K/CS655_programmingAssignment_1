@@ -112,7 +112,7 @@ public class Client {
             double avgResult = 0;
             for(long measurement: results.measurements) {avgResult += measurement;}
             avgResult /= (results.probeNum - results.failedProbes);
-            System.out.println("Average RTT for " + results.msgSize + " byte payload: " + avgResult + " nanoseconds");
+            System.out.println("Average RTT for " + results.msgSize + " byte payload: " + avgResult + " ms");
             //some printing for easy reading
             System.out.println(
                     "END OF " + results.type.toUpperCase() + " TESTS"
@@ -236,6 +236,7 @@ public class Client {
                 String response = connection.in.readLine();
                 long end = System.nanoTime();
                 long timeElapsed = end - start;
+                timeElapsed /= 1000000; //convert to ms
                 //if an error is echoed instead of the probe measurement, stop measuring
                 if(response.contains("404")){
                     System.err.println("Received 404 error in response.");
@@ -246,12 +247,12 @@ public class Client {
                                 ? "Response: " + response
                                 : "Response: " + response.substring(0, 20) + "..."
                 );
-                System.out.println("Time elapsed: " + timeElapsed + " nanoseconds");
+                System.out.println("Time elapsed: " + timeElapsed + " ms");
                 //Note that timeElapsed is in nanoseconds
                 if(results.type.equals("rtt")) {results.measurements[i] = timeElapsed;}
                 else if(results.type.equals("tput")) {
-                    //time is in nanoseconds, size is in bytes, result is megabytes per second
-                    double MBps = (double) (results.msgSize * 1000) / timeElapsed;
+                    //time is in ms, size is in bytes, result is megabytes per second
+                    double MBps = (double) results.msgSize / timeElapsed;
                     System.out.println("Throughput: " + MBps + "MB/s");
                     results.measurements[i] = (long) MBps;
                 }

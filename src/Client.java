@@ -79,7 +79,7 @@ public class Client {
         //I know the hardcoding here isn't ideal, but it works fine for this assignment
         int[] rttMsgSizes = {1, 100, 200, 400, 800, 1000};
         String[] rttFiles = {"1byte", "100byte", "200byte", "400byte", "800byte", "1000byte"};
-        int[] tputMsgSizes = {1024, 2048, 4096, 8192, 16384, 32768};
+        int[] tputMsgSizes = {1000, 2000, 4000, 8000, 16000, 32000};
         String[] tputFiles = {"1Kbyte", "2Kbyte", "4Kbyte", "8Kbyte", "16Kbyte", "32Kbyte"};
 
         //Run RTT measurements

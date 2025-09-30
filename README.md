@@ -25,7 +25,8 @@ calculates throughput and round-trip time.
   * On the machine intended to be the client, run: java Measure -t client -p {port number} -h {server IP address/hostname}
     * Optional arguments: 
       * -pn {probe number}: number of probes sent per test, default is 10
-      * -sd {server delay ms}: number of milliseconds of simulated server delay per response, default is 0
+      * -sd {server delay ms}: number of milliseconds of simulated server delay per response, default is 0     
+  * If the throughput numbers look odd on the csa machines (time recorded is 0ms and throughput evaluates to infinite), increase the server delay from 0. 
 
 ## Using the Echo program:  
 When running Echo, enter any text into the client console and hit 'enter' to send it to the server. 

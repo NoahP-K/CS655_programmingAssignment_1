@@ -25,6 +25,7 @@ public class Server {
             System.err.println("Could not display local host address.");
         }
 
+        //wait on client connection
         ServerConnection connection;
         try {
             System.out.println("Starting server...");
@@ -36,6 +37,7 @@ public class Server {
 
         System.out.println("Client connected.");
 
+        //repeatedly wait for client messages to echo
         String inputLine;
         try {
             while ((inputLine = connection.in.readLine()) != null) {
@@ -57,9 +59,9 @@ public class Server {
     static class MeasurementInfo {
         String type;    //rtt or tput
         int msgSize;    //num. bytes in payload
-        int probeNum;
-        int nextProbeNum;
-        int serverDelay;
+        int probeNum;   //number of probes per test
+        int nextProbeNum;   //next probe number to expect
+        int serverDelay;    //artificial delay to add before echoing (ms)
 
         public MeasurementInfo() {
             this.type = "unknown";
@@ -74,9 +76,7 @@ public class Server {
             MeasurementInfo info,
             String inputLine
     ) {
-        //String inputLine = "";
         try {
-            //inputLine = connection.in.readLine();
             String[] inputLineParsed = inputLine.split(" ");
             //verify that the setup message can be parsed into five sections
             if(inputLineParsed.length != 5) {
@@ -116,6 +116,7 @@ public class Server {
         return true;
     }
 
+    //perform the server measurement phase
     private static boolean measurementPhase(
             MeasurementInfo info,
             ServerConnection connection
@@ -187,6 +188,7 @@ public class Server {
             System.err.println("Could not display local host address.");
         }
 
+        //wait on client connection
         ServerConnection connection;
         try {
             System.out.println("Starting server...");

@@ -11,6 +11,7 @@ public class Client {
     public static void runEchoProgram(int port, String hostname) {
         Scanner scanner = new Scanner(System.in);
         ClientConnection connection;
+        //create connection to server
         try {
             System.out.println("Connecting to server " + hostname + "...");
             connection = new ClientConnection(hostname, port);
@@ -25,10 +26,13 @@ public class Client {
                         + "(Enter 'quit' to quit.)"
         );
         String userInput;
+
+        //loop through asking for a string to send to the server
         while (true) {
             userInput = scanner.nextLine();
             connection.out.println(userInput);
             if (userInput.equals("quit")) {
+                //if the user enters quit, stop the loop after sending it to the server
                 break;
             }
             try {
@@ -46,7 +50,7 @@ public class Client {
     static class MeasurementResults {
         String type;    //rtt or tput
         int msgSize;    //num. bytes in payload
-        int probeNum;
+        int probeNum;   //number of probes to send per test
         long[] measurements;     //collection of all measurements for this type+size
         int failedProbes;   //number of probes that do not get responses
 
@@ -63,6 +67,7 @@ public class Client {
     public static void runMeasureProgram(int port, String hostname, int probeNum, int serverDelay) {
         ClientConnection connection;
         System.out.println(System.getProperty("file.encoding"));
+        //connect to server
         try {
             System.out.println("Connecting to server " + hostname + "...");
             connection = new ClientConnection(hostname, port);
@@ -84,9 +89,11 @@ public class Client {
 
         //Run RTT measurements
         for(int i=0; i<rttFiles.length; i++) {
+            //for each rtt test file, run the connection phase and the measurement phase
             Client.MeasurementResults results = new MeasurementResults(probeNum, "rtt", rttMsgSizes[i]);
             //CSP
             boolean didSetUp = connectionSetupPhase(connection, results, serverDelay);
+            //stop the client if the setup was not acknowledged by the server
             if(!didSetUp) {
                 System.err.println("Setup failed for "
                         + results.type + " test on "
@@ -101,6 +108,7 @@ public class Client {
                     "STARTING " + results.type.toUpperCase() + " TESTS\n"
             );
             boolean didMeasure = measurementPhase(connection, rttFiles[i], results);
+            //stop the client if the measurements could not be completed
             if(!didMeasure) {
                 System.err.println("Measurement failed for "
                         + results.type + " test on "
@@ -122,6 +130,7 @@ public class Client {
 
         //Run TPUT measurements
         for(int i=0; i<tputFiles.length; i++) {
+            //repeat the general process for the throughput test files but indicate tput type measurements
             Client.MeasurementResults results = new MeasurementResults(probeNum, "tput", tputMsgSizes[i]);
             //CSP
             boolean didSetUp = connectionSetupPhase(connection, results, serverDelay);
@@ -170,6 +179,7 @@ public class Client {
         try {
             String response = connection.in.readLine();
             if(!response.contains("200")) {
+                //if the termination is not acknowledged properly, still terminate but show an error
                 throw new Exception("Did not receive 200 OK response.");
             } else {
                 System.out.println("Received OK. Terminating without error.");
